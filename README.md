@@ -92,7 +92,7 @@ Beberapa tahapan EDA yang dilakukan meliputi:
     import seaborn as sns
     import matplotlib.pyplot as plt
 
-    sns.countplot(x='target', data=df)
+    sns.countplot(x='diagnosa', data=df)
     plt.title('Distribusi Diagnosis (0: Benign, 1: Malignant)')
     plt.xlabel('Diagnosis')
     plt.ylabel('Jumlah')
@@ -104,7 +104,7 @@ Beberapa tahapan EDA yang dilakukan meliputi:
 * **Korelasi Fitur:** Visualisasi menggunakan `heatmap` untuk memahami hubungan antar fitur.
 
     ```python
-    correlation_matrix = df[breast_cancer_data.feature_names].corr()
+    correlation_matrix = df[['radius_mean', 'texture_mean', 'perimeter_mean', 'area_mean', 'smoothness_mean', 'compactness_mean', 'concavity_mean', 'concave points_mean', 'symmetry_mean', 'fractal_dimension_mean', 'radius_se', 'texture_se', 'perimeter_se', 'area_se', 'smoothness_se', 'compactness_se', 'concavity_se', 'concave points_se', 'symmetry_se', 'fractal_dimension_se', 'radius_worst', 'texture_worst', 'perimeter_worst', 'area_worst', 'smoothness_worst', 'compactness_worst', 'concavity_worst', 'concave points_worst', 'symmetry_worst', 'fractal_dimension_worst']].corr()
     plt.figure(figsize=(12, 10))
     sns.heatmap(correlation_matrix, annot=False, cmap='coolwarm')
     plt.title('Matriks Korelasi Fitur')
@@ -116,11 +116,12 @@ Beberapa tahapan EDA yang dilakukan meliputi:
 * **Boxplot Fitur vs Target:** Visualisasi menggunakan `boxplot` untuk melihat distribusi beberapa fitur berdasarkan diagnosis.
 
     ```python
-    for feature in breast_cancer_data.feature_names[:5]:
+    features_to_plot = ['radius_mean', 'texture_mean', 'perimeter_mean', 'area_mean', 'smoothness_mean']
+    for feature in features_to_plot:
         plt.figure(figsize=(8, 6))
-        sns.boxplot(x='target', y=feature, data=df)
+        sns.boxplot(x='diagnosis', y=feature, data=df)  # Ganti 'target' dengan 'diagnosis'
         plt.title(f'{feature} vs Diagnosis')
-        plt.xlabel('Diagnosis (0: Benign, 1: Malignant)')
+        plt.xlabel('Diagnosis (B: Benign, M: Malignant)') # Sesuaikan label jika perlu
         plt.ylabel(feature)
         plt.show()
     ```
@@ -146,8 +147,9 @@ from sklearn.preprocessing import StandardScaler
 from imblearn.over_sampling import SMOTE
 
 # 1. Pemilihan Fitur dan Target
-X = df[breast_cancer_data.feature_names]
-y = df['target']
+features = ['radius_mean', 'texture_mean', 'perimeter_mean', 'area_mean', 'smoothness_mean', 'compactness_mean', 'concavity_mean', 'concave points_mean', 'symmetry_mean', 'fractal_dimension_mean', 'radius_se', 'texture_se', 'perimeter_se', 'area_se', 'smoothness_se', 'compactness_se', 'concavity_se', 'concave points_se', 'symmetry_se', 'fractal_dimension_se', 'radius_worst', 'texture_worst', 'perimeter_worst', 'area_worst', 'smoothness_worst', 'compactness_worst', 'concavity_worst', 'concave points_worst', 'symmetry_worst', 'fractal_dimension_worst']
+X = df[features]
+y = df['diagnosis']
 
 # 2. Pembagian Data
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
